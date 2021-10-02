@@ -1,64 +1,286 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<h2 align="center" style="color: green">
+yajra-datatables-laravel-8</h2>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## About Project
 
-## About Laravel
+I am create simple Yajra Datatables using laravel 8.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+##Install Laravel App
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+In general, our first step primarily focuses on installing a new laravel application. Run the below-mentioned artisan command to install the sacred canon.
 
-## Learning Laravel
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+composer create-project laravel/laravel yajra-datatables --prefer-dist
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+##Get into the project:
 
-## Laravel Sponsors
+```
+cd yajra-datatables 
+```
+##Install Yajra Datatable Package
+I wonder if you haven’t heard about <a target="_blank" href="https://github.com/yajra/laravel-datatables">Yajra Datatables</a> library, it is a jQuery DataTables API for Laravel 4|5|6|7. This plugin handles server-side works of DataTables jQuery plugin through AJAX option by considering the Eloquent ORM, Fluent Query Builder or Collection.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Theoretically, the following command helps you installing the Yajra DataTable plugin in Laravel.
 
-### Premium Partners
+```
+composer require yajra/laravel-datatables-oracle
+```
+Additionally, datatable service provider in providers and alias inside the config/app.php file.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+```
+'providers' => [
+	
+	
+	Yajra\DataTables\DataTablesServiceProvider::class,
+]
+'aliases' => [
+	
+	
+	'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+]
+```
 
-## Contributing
+##Run vendor publish command further this step is optional:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+php artisan vendor:publish --provider="Yajra\DataTables\DataTablesServiceProvider"
+```
+Create Model and Migration file with this command
+```
+php artisan make:model Employee -m
 
-## Code of Conduct
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+##Open
+database/migrations/timestamp_create_employees_table.php 
+file and add the given below code.
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+public function up()
+{
+    Schema::create('employees', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->string('username');
+        $table->string('phone');
+        $table->string('dob');
+        $table->timestamps();
+    });
+}
 
-## License
+```
+##Open app/Models/Employee.php not only – but also lay down the schema in the $fillable array.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Employee extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'name',
+        'email',
+        'username',
+        'phone',
+        'dob',
+    ];    
+}
+```
+##Run migration using the following command.
+
+
+
+
+```
+php artisan migrate
+```
+## Insert Dummy Data or Records with  Use Seed and the built-in plugin Faker 
+Open the database/seeds/DatabaseSeeder.php file and add the following code.
+
+```
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+
+        $gender = $faker->randomElement(['male', 'female']);
+
+    	foreach (range(1,200) as $index) {
+            DB::table('employees')->insert([
+                'name' => $faker->name($gender),
+                'email' => $faker->email,
+                'username' => $faker->username,
+                'phone' => $faker->phoneNumber,
+                'dob' => $faker->date($format = 'Y-m-d', $max = 'now')
+            ]);
+        }
+    }
+}
+
+```
+##Run the following command to generate dummy data:
+
+```
+php artisan db:seed
+
+```
+##Create Controller
+```
+php artisan make:controller EmployeeController
+
+```
+###Open app/Http/Controllers/EmployeeController.php file and add the following code.
+```
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Employee;
+use DataTables;
+
+class EmployeeController extends Controller
+{
+    public function index()
+    {
+        return view('welcome');
+    }
+
+
+    public function getemployees(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Employee::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+}
+```
+##Define Route
+###Open routes/web.php and add the given code.
+```
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('employees', [employee::class, 'index']);
+
+Route::get('employees/list', [EmployeeController::class, 'getemployees'])->name('employees.list');
+```
+##Display Data
+###Open resources/views/welcome.blade.php file and place the following code.
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Laravel 8|7 Datatables Tutorial</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"/>
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+<body>
+    
+<div class="container mt-5">
+    <h2 class="mb-4">Laravel 7|8 Yajra Datatables Example</h2>
+    <table class="table table-bordered yajra-datatable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>DOB</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+   
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+<script type="text/javascript">
+  $(function () {
+    
+    var table = $('.yajra-datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('employees.list') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'name', name: 'name'},
+            {data: 'email', name: 'email'},
+            {data: 'username', name: 'username'},
+            {data: 'phone', name: 'phone'},
+            {data: 'dob', name: 'dob'},
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: true, 
+                searchable: true
+            },
+        ]
+    });
+    
+  });
+</script>
+</html>
+```
+##Run the following command and check our progress on the browser.
+
+```
+php artisan serve
+
+```
+
